@@ -1,0 +1,15 @@
+---
+
+- name: Run python script to read a file
+  hosts: localhost
+  gather_facts: false
+  connection: local 
+
+  tasks: 
+    - name: Read file content
+      command: python3 {{ playbook_dir }}/lookup_plugins/read_file.py 
+      register: file_output 
+
+    - name: Print file content 
+      debug: 
+        msg: "{{ file_output.stdout }}"
