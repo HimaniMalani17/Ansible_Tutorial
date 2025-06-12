@@ -1,0 +1,19 @@
+---
+
+- name: Variables Tutorial
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars_files:
+   - variables.yml
+
+  tasks:
+    - name: Print Variables
+      debug: 
+        msg: 
+        - "I drive a {{ color }} {{ car }}."
+        - "List: {{ list1[1]  }}"
+        - "Dictionary: {{ dict1.name }}"
+        - "Merged List: {{ list2 + list3 }}"
+
+...

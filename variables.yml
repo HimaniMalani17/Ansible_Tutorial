@@ -1,0 +1,10 @@
+color: black
+car: Ford
+list1: 
+  - apple
+  - banana
+  - mango
+dict1:
+  name: Jim
+  age: 25
+  occupation: Accountant
