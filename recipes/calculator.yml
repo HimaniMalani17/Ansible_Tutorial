@@ -1,0 +1,17 @@
+---
+
+- name: Perform math operations
+  hosts: localhost
+  gather_facts: false
+  connection: local 
+
+  tasks:
+    - name: Add two numbers 
+      debug:
+        msg: "Addition result: {{ lookup('math_operations', '10', '5', 'add') }}"
+
+    - name: Divide two numbers 
+      debug: 
+        msg: "Division result: {{ lookup('math_operations', '6', '3', 'divide') }}"
+
+...

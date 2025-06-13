@@ -1,0 +1,132 @@
+---
+
+- name: Loop Tutorial
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+   num: 5
+   list2:
+    - 1
+    - 2
+    - 3
+   list3:
+    - 4
+    - 5
+   users:
+    - name: Jim
+      user_id: 1
+      email: jim@gmail.com
+    - name: Pam
+      user_id: 2
+      email: pam@gmail.com
+    - name: Michael
+      user_id: 3
+      email: michael@gmail.com
+    - name: Erin 
+      user_id: 4
+      email: erin@gmail.com
+   numbers: [1, 2, 3, 4, 5]
+   dict1:
+    user1: Jim
+    user2: Pam
+    user3: Michael
+
+  tasks:
+    - name: Iterate through a list and multiply with its index
+      debug:
+        msg: "Result: {{ idx * item }}"
+      loop: "{{ list2 }}"
+      loop_control:
+        index_var: idx
+
+    - name: Extract names from users
+      set_fact: 
+        user_names: "{{ users | map(attribute='name') | list }}"
+    
+    - name: Print the list of user names
+      debug:
+        msg: "{{ user_names }}"
+
+    - name: Create a new list with multiples of 2
+      set_fact: 
+        new_numbers: "{{ new_numbers | default([]) + [item * 2]  }}"
+      loop: "{{ numbers }}"
+      loop_control:
+        loop_var: item
+
+    - name: Print the new list
+      debug:
+        msg: "{{ new_numbers }}"
+
+    - name: Custom label in loop
+      debug:
+        msg: "Working on {{ item.name }}"
+      loop:
+        - { name: "task1" }
+        - { name: "task2" }
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Print item and index
+      debug:
+        msg: "Item {{ item }} is at index {{ idx }}"
+      loop: "{{ ['a', 'b', 'c'] }}"
+      loop_control:
+        index_var: idx
+
+    - name: Iterating through a Dictionary
+      debug:
+        msg: "Key: {{ item.key }}, Value: {{ item.value }}"
+      loop: "{{ dict1 | dict2items }}"
+
+    - name: Check if a file exists
+      stat:
+        path: /home/paroscale/myapp/hello.txt
+      register: file_status
+      until: file_status.stat.exists
+      retries: 5
+      delay: 3
+
+    - name: Notify that file is found
+      debug:
+        msg: "The file /home/paroscale/myapp/hello.txt exists."
+
+    - name: Select even numbers from a list
+      debug: 
+        msg: "{{ numbers | select('search','.*[02468]$') }}"
+
+    - name: Find a name from the list 
+      debug: 
+        msg: "{{ user_names | select('equalto', 'Jim') }}"
+
+    - name: Find attributes from the dictionary 
+      debug: 
+        msg: "{{ users | selectattr('name', 'equalto', 'Jim') | first }}"
+
+    #- name: Show an error for number 7
+    #  fail: 
+    #   msg: "Error when encountering the number 7."
+    #  loop: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #  when: item == 7
+
+    #- name: Iterate only until the user_id is less than 3.
+    #  fail: 
+    #  msg: "User Id should be less than 3."
+    #  loop: "{{ users }}"
+    #  when: item.user_id >= 3
+
+    #- name: Iterate only until the user_id is less than 3.
+    #  fail: 
+    #    msg: "User Id should be less than 3."
+    #  loop: "{{ users }}"
+    #  until: item.user_id < 3
+    #  retries: 1
+    #  delay: 1
+
+    - name: Variables
+      vars:
+        num: 2
+      debug:
+        msg: "The number is {{ num }}"
+...

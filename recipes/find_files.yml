@@ -1,1 +1,17 @@
+---
 
+- name: Find files 
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Get matching files
+      set_fact: 
+        matched_files: "{{ lookup('file_match', '/home/paroscale/myapp/files', '50')}}"
+
+    - name: Show files
+      debug:
+        msg: "{{ matched_files }}"
+
+...
