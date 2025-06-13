@@ -1,0 +1,25 @@
+---
+
+- name: Run all recipes
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  vars: 
+    recipe_dir: "{{ playbook_dir }}/recipes"
+
+  tasks:
+  # Run ls command  and store op in var
+  # Run the loop on that 
+
+    - name: List all recipe playbooks
+      command: ls -1 {{ recipe_dir }}
+      register: playbooks
+
+    - debug:
+        msg: "{{ playbooks }}"
+
+    - name: Run each playbook in the recipes directory
+      command: ansible-playbook {{ recipe_dir }}/{{ item }}
+      loop: "{{ playbooks.stdout_lines }}"
+
