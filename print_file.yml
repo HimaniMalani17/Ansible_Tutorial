@@ -6,10 +6,14 @@
   connection: local 
 
   tasks: 
-    - name: Read file content
-      command: python3 {{ playbook_dir }}/lookup_plugins/read_file.py 
-      register: file_output 
+    - name: Set file content using custom plugin
+      set_fact:
+        file_content: "{{ lookup('read_file', '/home/paroscale/myapp/hello.txt') }}"
 
-    - name: Print file content 
+    - name: Print file content
       debug: 
-        msg: "{{ file_output.stdout }}"
+        msg: "{{ file_content }}" 
+
+    # - name: Print file content 
+    #   debug: 
+    #     msg: "{{ file_output.stdout }}"
