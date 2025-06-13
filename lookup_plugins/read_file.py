@@ -1,10 +1,13 @@
 import sys
+from ansible.plugins.lookup import LookupBase
 
-def read_file(file_path):
-    with open (file_path, 'r') as file:
-        return file.read()
+class LookupModule(LookupBase):
+    def run(self, terms, **kwargs):
+        file_path = terms[0]
+        content = self.read_file(file_path)
+        return [content]
 
-if __name__ == "__main__":
-    file_path = "/home/paroscale/myapp/hello.txt"
-    content = read_file(file_path)
-    print(content)
+    def read_file(self, file_path):
+        with open (file_path, 'r') as file:
+            return file.read()
+
